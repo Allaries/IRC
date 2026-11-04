@@ -24,12 +24,12 @@ int	main(int argc, char **argv)
 {
 	if (argc != 2)
 		return (0);
-	int servfd = socket(AF_INET6, SOCK_STREAM, 0);
 	addrinfo *res;
 	setup_address(argv[1], &res);
+	int servfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	bind(servfd, res->ai_addr, res->ai_addrlen);
 	freeaddrinfo(res);
-	fcntl(servfd, O_NONBLOCK);
+	fcntl(servfd, F_SETFL, O_NONBLOCK);
 	listen(servfd, 1);
 	//tableau des futurs fd de tt les clients (le 1er (adaj) est le serveur)
 	pollfd adaj;
@@ -42,11 +42,10 @@ int	main(int argc, char **argv)
 	std::cout << "setup fini" << std::endl;
 	while (1)
 	{
-		int ret = poll(&adaj, all_fd.size(), -1);
+		int ret = poll(&all_fd[0], all_fd.size(), -1);
 		if (ret > 0)
 		{
-			std::cout << "coucou les ptits indiens" << std::endl;
-			for (size_t i = 0; i <= all_fd.size(); i++)
+			for (size_t i = 0; i < all_fd.size(); i++)
 				if (all_fd[i].revents & POLLIN && i == 0)
 				{
 					std::cout << "coucou la tcheam" << std::endl;
@@ -54,8 +53,8 @@ int	main(int argc, char **argv)
 					socklen_t addrlen = sizeof(client_addr);
 					int clientfd = accept(servfd, (sockaddr *)&client_addr, &addrlen);
 					if (clientfd < 0)
-						close (clientfd);
-					fcntl(clientfd, O_NONBLOCK);
+						break ;
+					fcntl(clientfd, F_SETFL, O_NONBLOCK);
 					pollfd user;
 					user.fd = clientfd;
 					user.events = POLLIN;
