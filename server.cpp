@@ -24,9 +24,15 @@ void	Server::loop()
 				{
 					std::map<int, Client>::iterator it = this->all_client.find(this->all_fd[i].fd);
 					if (it != this->all_client.end())
-						/*int status = */ it->second.recv_usage();
-					//ptet des trucs a rajouter mais je suis encore chokbar de mon crime de guerre (*ressenti pas forcement vrai, jsp)
-					//rajouter status, = 0 le mec est deco, = -1 ya un une dingz (jsp quoi faire)
+					{
+						int status = it->second.recv_usage();
+						if (status == 0)
+						{
+							this->all_client.erase(all_fd[i].fd);
+							this->all_fd.erase(all_fd.begin() + i);
+							i--;
+						}
+					}
 				}
 		}
 	}
