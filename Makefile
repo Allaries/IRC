@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRC = main.cpp server.cpp client.cpp
+SRC = main.cpp src/*
 NAME = IRC
 
 OBJDIR = obj

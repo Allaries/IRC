@@ -19,7 +19,8 @@ private:
 	bool is_op;
 
 public:
-	int	recv_usage();
+	int		recv_usage();
+	void	check_cmd();
 	Client(int fd, std::string ip);
 	~Client();
 };

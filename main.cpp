@@ -1,5 +1,5 @@
-#include "include.hpp"
-#include "server.hpp"
+#include "include/include.hpp"
+#include "include/server.hpp"
 
 
 void setup_address(const char *port_str, struct addrinfo **res) 
@@ -22,17 +22,19 @@ void setup_address(const char *port_str, struct addrinfo **res)
 
 int	main(int argc, char **argv)
 {
-	if (argc != 2)
+	if (argc != 3)
 		return (0);
 	addrinfo *res;
 	setup_address(argv[1], &res);
 	int servfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	if (servfd < 0)
+		return (0);
 	bind(servfd, res->ai_addr, res->ai_addrlen);
 	freeaddrinfo(res);
 	fcntl(servfd, F_SETFL, O_NONBLOCK);
 	listen(servfd, 1);
-	Server service(servfd);
-	std::cout << "setup fini" << std::endl;
+	Server service(servfd, argv[2]);
+	std::cout << " --- Server Launched --- " << std::endl;
 	// service contient le tableau de pollfd  avec le fd du server qui ecoute et contiendra tt les prochains fd de clients
 	service.loop();
 }

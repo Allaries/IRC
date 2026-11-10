@@ -32,6 +32,8 @@ void	Server::loop()
 							this->all_fd.erase(all_fd.begin() + i);
 							i--;
 						}
+						//chopper la cmd ici
+						// it->second.check_cmd();
 					}
 				}
 		}
@@ -55,7 +57,7 @@ int	Server::addclient(int clientfd, std::string hostname)
 	return (1);
 }
 
-Server::Server(int servfd)
+Server::Server(int servfd, std::string password)
 {
 	pollfd adaj;
 	adaj.fd = servfd;
@@ -63,6 +65,7 @@ Server::Server(int servfd)
 	adaj.revents = 0;
 	this->serv = adaj;
 	all_fd.push_back(adaj);
+	this->password = password;
 }
 
 Server::~Server()

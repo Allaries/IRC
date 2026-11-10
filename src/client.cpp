@@ -1,4 +1,4 @@
-#include "client.hpp"
+#include "../include/client.hpp"
 
 int	Client::recv_usage()
 {
@@ -17,6 +17,12 @@ int	Client::recv_usage()
 	}
 	return (octet);
 }
+
+void	Client::check_cmd()
+{
+	
+}
+
 
 Client::Client(int fd, std::string ip) : fd(fd), hostname(ip), inbuffer(""), outbuffer(""), nickname(""), username(""), realname(""), password_given(false), registered(false), is_op(false)
 {
