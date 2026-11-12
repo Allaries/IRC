@@ -1,7 +1,7 @@
 #ifndef CHANNEL
 # define CHANNEL
-# include "server.hpp"
 # include "include.hpp"
+# include "server.hpp"
 
 class Server;
 

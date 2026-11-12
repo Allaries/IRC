@@ -1,4 +1,5 @@
 #include "../include/client.hpp"
+#include "../include/command.hpp"
 
 int	Client::recv_usage()
 {
@@ -8,7 +9,6 @@ int	Client::recv_usage()
 	{
 		buffer[octet] = '\0';
 		this->inbuffer += buffer;
-		std::cout << this->inbuffer;
 	}
 	if (octet == 0)
 	{
@@ -18,11 +18,29 @@ int	Client::recv_usage()
 	return (octet);
 }
 
-void	Client::check_cmd()
+bool	Client::is_cmd(std::string& outLine)
 {
-	
+	std::string::size_type	pos = this->inbuffer.find("\r\n");
+	size_t					delimLen = 2;
+
+	if (pos == std::string::npos)
+	{
+		pos = this->inbuffer.find("\n");
+		delimLen = 1;
+	}
+	if (pos == std::string::npos)
+		return false;
+
+	outLine = this->inbuffer.substr(0, pos);
+	this->inbuffer.erase(0, pos + delimLen);
+	return true;
 }
 
+
+void	Client::setPassOk(bool b)
+{
+	this->password_given = b;
+}
 
 Client::Client(int fd, std::string ip) : fd(fd), hostname(ip), inbuffer(""), outbuffer(""), nickname(""), username(""), realname(""), password_given(false), registered(false), is_op(false)
 {

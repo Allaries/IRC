@@ -19,8 +19,11 @@ private:
 	bool is_op;
 
 public:
+	void	setPassOk(bool b);
+	void	setRegisOk(bool b);
+	void	setOpOk(bool b);
 	int		recv_usage();
-	void	check_cmd();
+	bool	is_cmd(std::string &line);
 	Client(int fd, std::string ip);
 	~Client();
 };
